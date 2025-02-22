@@ -1,13 +1,24 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import "./LandingPage.css";
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
-      <h1>Sell Your Items Easily</h1>
-      <p>Upload an item, let AI analyze it, and list it on multiple platforms automatically.</p>
-      <button onClick={() => navigate("/upload")}>Start Selling</button>
+    <div className="landing-container">
+      <div className="content-wrapper">
+        <h1>QuickList</h1>
+        <p>
+          Upload an item, and list it on multiple platforms automatically.
+        </p>
+        <p>
+          Sell Smart. Sell Fast. Sell NOW.
+        </p>
+        <button className="cta-button" onClick={() => navigate("/upload")}>
+          Start Selling
+        </button>
+      </div>
     </div>
   );
 };

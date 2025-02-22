@@ -4,6 +4,7 @@ import Webcam from "react-webcam";
 import Processing from "./Processing";
 import { useNavigate } from "react-router-dom";
 import { useListings } from "../../ListingsContext"; // Import Context
+import "./UploadItem.css"; // Import the CSS file
 
 function UploadItem() {
   const [image, setImage] = useState(null);
@@ -39,6 +40,11 @@ function UploadItem() {
       });
   };
 
+  const removeImage = () => {
+    setImage(null);
+    setPreview(null);
+  };
+
   const handlePlatformSelection = (platform) => {
     setPlatforms((prev) =>
       prev.includes(platform) ? prev.filter((p) => p !== platform) : [...prev, platform]
@@ -71,57 +77,68 @@ function UploadItem() {
   return (
     <>
       {loading && <Processing />}
-      <div>
-        <h3>Upload or Take a Picture</h3>
+      <div className="upload-container">
+        <div className="upload-wrapper">
+          <h2>Upload or Capture an Image</h2>
+          <p className="description">
+            Upload a picture of your item or use your camera to take a new one.
+          </p>
 
-        {!isMobile && (
-          <button onClick={() => setUseCamera(!useCamera)}>
-            {useCamera ? "Use File Upload" : "Use Camera"}
-          </button>
-        )}
+          {!isMobile && (
+            <div className="toggle-camera">
+              <button className="cta-button" onClick={() => setUseCamera(!useCamera)}>
+                {useCamera ? "Use File Upload" : "Use Camera"}
+              </button>
+            </div>
+          )}
 
-        {useCamera && !isMobile && (
-          <>
-            <Webcam ref={webcamRef} screenshotFormat="image/jpeg" width="300" />
-            <button onClick={captureImage}>Capture Photo</button>
-          </>
-        )}
+          {useCamera && !isMobile && (
+            <div className="camera-section">
+              <Webcam ref={webcamRef} screenshotFormat="image/jpeg" className="webcam" />
+              <button className="capture-button" onClick={captureImage}>
+                Capture Photo
+              </button>
+            </div>
+          )}
 
-        {isMobile && (
-          <>
+          <div className="file-upload-section">
             <input
               type="file"
               accept="image/*"
-              capture="environment"
               onChange={handleImageChange}
               id="fileInput"
-              style={{ display: "none" }}
+              className="hidden-file-input"
             />
-            <button onClick={() => document.getElementById("fileInput").click()}>
-              Capture Image
-            </button>
-          </>
-        )}
-
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-
-        {preview && <img src={preview} alt="Preview" width="200" />}
-
-        <h3>Select Platforms</h3>
-        {["eBay", "Facebook", "Kijiji", "Craigslist"].map((platform) => (
-          <div key={platform}>
-            <input
-              type="checkbox"
-              checked={platforms.includes(platform)}
-              onChange={() => handlePlatformSelection(platform)}
-            />
-            {platform}
           </div>
-        ))}
 
-        <button onClick={handleUpload} disabled={loading}>
-          {loading ? "Processing..." : "Identify Item"}
-        </button>
+          {preview && (
+            <div className="preview-section">
+              <img src={preview} alt="Preview" className="image-preview" />
+              <button className="remove-button" onClick={removeImage}>
+                Remove Image
+              </button>
+            </div>
+          )}
+
+          <h3>Select Platforms</h3>
+          <p className="description">Choose where you'd like to list your item.</p>
+          <div className="platforms">
+            {["eBay", "Facebook", "Kijiji", "Craigslist"].map((platform) => (
+              <button
+                key={platform}
+                type="button"
+                className={`platform-chip ${platforms.includes(platform) ? "selected" : ""}`}
+                onClick={() => handlePlatformSelection(platform)}
+              >
+                {platform}
+              </button>
+            ))}
+          </div>
+
+          <button onClick={handleUpload} disabled={loading} className="cta-button upload-cta">
+            {loading ? "Processing..." : "Identify Item"}
+          </button>
+        </div>
       </div>
     </>
   );

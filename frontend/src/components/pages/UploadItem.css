@@ -1,0 +1,146 @@
+/* Container styles with a gradient background */
+.upload-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #74ebd5, #acb6e5);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 1rem;
+  }
+  
+  /* Card-style wrapper for the content */
+  .upload-wrapper {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+  }
+  
+  /* Headings */
+  .upload-wrapper h3 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-size: 1.8rem;
+  }
+  
+  /* Toggle camera button container */
+  .toggle-camera {
+    margin-bottom: 1rem;
+  }
+  
+  /* Webcam section styling */
+  .camera-section {
+    margin-bottom: 1rem;
+  }
+  
+  .webcam {
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  /* Mobile upload section */
+  .mobile-upload {
+    margin-bottom: 1rem;
+  }
+  
+  /* File input styling */
+  .file-input {
+    display: block;
+    margin: 1rem auto;
+  }
+  
+  /* Preview image styling */
+  .image-preview {
+    display: block;
+    margin: 1rem auto;
+    max-width: 200px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Platforms container */
+  .platforms {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Platform chip styling */
+  .platform-chip {
+    background: #f0f0f0;
+    border: none;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .platform-chip:hover {
+    background: #e0e0e0;
+    transform: translateY(-2px);
+  }
+  
+  .platform-chip.selected {
+    background: #74ebd5;
+    color: white;
+  }
+  
+  /* Call-to-action button styling */
+  .cta-button {
+    background: #ff6b6b;
+    border: none;
+    color: white;
+    padding: 0.8rem 2.5rem;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    margin-top: 1rem;
+  }
+  
+  .cta-button:hover {
+    background: #ff4757;
+    transform: translateY(-3px);
+  }
+  
+  .cta-button:active {
+    transform: translateY(0);
+  }
+  
+  /* Capture button styling (shared with mobile and webcam capture) */
+  .capture-button {
+    background: #ff6b6b;
+    border: none;
+    color: white;
+    padding: 0.6rem 2rem;
+    font-size: 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  
+  .capture-button:hover {
+    background: #ff4757;
+    transform: translateY(-3px);
+  }
+  
+  .capture-button:active {
+    transform: translateY(0);
+  }
+  
+  /* Upload button styling */
+  .upload-cta {
+    display: block;
+    width: 100%;
+  }
+  
