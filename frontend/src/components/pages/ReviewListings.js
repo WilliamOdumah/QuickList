@@ -100,12 +100,18 @@ const ReviewListings = () => {
     }
   };
 
+  const unavailablePlatforms = ["Facebook", "eBay", "Craigslist"]; // Platforms that can't be posted
+
+  const handleUnavailableClick = (platform) => {
+    alert(`Posting to ${platform} is temporarily unavailable. Please try again later.`);
+  };
+  
   return (
     <div className="review-container">
       <div className="review-wrapper">
         <h1>Review & Edit Listings</h1>
         <p>Here’s how your item will appear on each platform.</p>
-
+  
         {loading ? (
           <div className="spinner"></div>
         ) : listings && Object.keys(listings).length > 0 ? (
@@ -116,7 +122,7 @@ const ReviewListings = () => {
                   <img src={platformLogos[platform]} alt={platform} className="platform-logo" />
                   <h3>{platform}</h3>
                 </div>
-
+  
                 {editing[platform] ? (
                   <div className="edit-section">
                     <label>
@@ -129,7 +135,7 @@ const ReviewListings = () => {
                         }
                       />
                     </label>
-
+  
                     <label>
                       <strong>Price:</strong>
                       <input
@@ -140,7 +146,7 @@ const ReviewListings = () => {
                         }
                       />
                     </label>
-
+  
                     <div className="edit-buttons">
                       <button onClick={() => handleSave(platform)}>Save</button>
                       <button onClick={() => setEditing({ ...editing, [platform]: false })}>
@@ -162,18 +168,26 @@ const ReviewListings = () => {
                     <p>
                       <strong>Suggested Price:</strong> ${details.suggested_price}
                     </p>
-
+  
                     <div className="action-buttons">
                       <button onClick={() => handleEditClick(platform, details)}>Edit</button>
                       <button onClick={() => handleDelete(platform)}>Delete</button>
                     </div>
                   </div>
                 )}
-
-                <button onClick={() => handlePostListing(platform, details)} className="cta-button">
+  
+                {/* Post Button (Grayed out for unavailable platforms) */}
+                <button
+                  onClick={() =>
+                    unavailablePlatforms.includes(platform)
+                      ? handleUnavailableClick(platform)
+                      : handlePostListing(platform, details)
+                  }
+                  className={`cta-button ${unavailablePlatforms.includes(platform) ? "disabled-button" : ""}`}
+                >
                   {postingStatus[platform] || "Post"}
                 </button>
-
+  
                 {listingUrls[platform] && (
                   <p className="listing-url">
                     ✅{" "}
@@ -186,11 +200,13 @@ const ReviewListings = () => {
             ))}
           </div>
         ) : (
-          <p>No listings available.</p>
+          <p>Gathering templates.... Wait one sec.</p>
         )}
       </div>
     </div>
   );
+  
+  
 };
 
 export default ReviewListings;

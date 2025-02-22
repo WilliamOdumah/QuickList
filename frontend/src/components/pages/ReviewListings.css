@@ -136,3 +136,10 @@
     transform: rotate(360deg);
   }
 }
+
+.disabled-button {
+  background: #ccc !important;
+  color: #666 !important;
+  cursor: pointer;
+}
+
