@@ -12,7 +12,7 @@ app.use(express.json());
 
 // Initialize OpenAI client
 const openai = new OpenAI({
-  apiKey: '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', // API Key from .env
+  apiKey: process.env.OPENAI_API_KEY, // API Key from .env
 });
 
 // Step 1: Extract Item Details
