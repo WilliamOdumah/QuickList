@@ -49,4 +49,11 @@
   .cta-button:active {
     transform: translateY(0);
   }
+
+    .logo {
+        width: 120px;
+        height: auto;
+        margin-bottom: 1rem;
+    }
+  
   
