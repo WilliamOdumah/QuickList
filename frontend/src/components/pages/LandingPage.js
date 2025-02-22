@@ -13,7 +13,7 @@ const LandingPage = () => {
           Upload an item, and list it on multiple platforms automatically.
         </p>
         <p>
-          Sell Smarter. Sell Faster.
+          Sell Smarter. Sell Faster!
         </p>
         <button className="cta-button" onClick={() => navigate("/upload")}>
           Start Selling
