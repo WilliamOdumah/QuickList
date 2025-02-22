@@ -106,15 +106,23 @@ const ReviewListings = () => {
     alert(`Posting to ${platform} is temporarily unavailable. Please try again later.`);
   };
   
+  const handleListAllClick = () => {
+    alert("Listing all at once is temporarily unavailable. Please try again later.");
+  };
+  
   return (
     <div className="review-container">
       <div className="review-wrapper">
         <h1>Review & Edit Listings</h1>
         <p>Here’s how your item will appear on each platform.</p>
-  
+
         {loading ? (
           <div className="spinner"></div>
         ) : listings && Object.keys(listings).length > 0 ? (
+          <>
+            <button className="cta-button disabled-button" onClick={handleListAllClick}>
+                List on All Platforms
+            </button>
           <div className="listings-grid">
             {Object.entries(listings).map(([platform, details]) => (
               <div key={platform} className="listing-card">
@@ -196,15 +204,18 @@ const ReviewListings = () => {
                     </a>
                   </p>
                 )}
+
               </div>
             ))}
           </div>
+          </>
         ) : (
           <p>Gathering templates.... Wait one sec.</p>
         )}
       </div>
     </div>
   );
+  
   
   
 };
