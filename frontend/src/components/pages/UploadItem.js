@@ -3,19 +3,19 @@ import axios from "axios";
 import Webcam from "react-webcam";
 import Processing from "./Processing";
 import { useNavigate } from "react-router-dom";
+import { useListings } from "../../ListingsContext"; // Import Context
 
 function UploadItem() {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [itemDetails, setItemDetails] = useState(null);
   const [useCamera, setUseCamera] = useState(false);
   const webcamRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
   const [platforms, setPlatforms] = useState([]);
+  const { setListings } = useListings(); // Use Context
   const navigate = useNavigate();
 
-  // Detect if the user is on a mobile device
   useEffect(() => {
     const userAgent = navigator.userAgent.toLowerCase();
     setIsMobile(/android|iphone|ipad|ipod/.test(userAgent));
@@ -24,7 +24,6 @@ function UploadItem() {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
     setImage(file);
     setPreview(URL.createObjectURL(file));
   };
@@ -59,30 +58,28 @@ function UploadItem() {
       const response = await axios.post("http://localhost:5000/api/list", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setItemDetails(response.data);
+
+      setListings(response.data);
+      navigate("/review-listings"); 
     } catch (error) {
       console.error("Error recognizing image:", error);
       alert("Failed to process the item.");
     }
     setLoading(false);
-    navigate("/review-listings");
   };
 
   return (
     <>
       {loading && <Processing />}
-
       <div>
         <h3>Upload or Take a Picture</h3>
 
-        {/* Camera Toggle (Only for laptops) */}
         {!isMobile && (
           <button onClick={() => setUseCamera(!useCamera)}>
             {useCamera ? "Use File Upload" : "Use Camera"}
           </button>
         )}
 
-        {/* Camera View (Only for laptops) */}
         {useCamera && !isMobile && (
           <>
             <Webcam ref={webcamRef} screenshotFormat="image/jpeg" width="300" />
@@ -90,7 +87,6 @@ function UploadItem() {
           </>
         )}
 
-        {/* Mobile Camera/File Upload */}
         {isMobile && (
           <>
             <input
@@ -99,7 +95,7 @@ function UploadItem() {
               capture="environment"
               onChange={handleImageChange}
               id="fileInput"
-              style={{ display: "none" }} // Hide the default input
+              style={{ display: "none" }}
             />
             <button onClick={() => document.getElementById("fileInput").click()}>
               Capture Image
@@ -107,10 +103,8 @@ function UploadItem() {
           </>
         )}
 
-        {/* File Upload (Always available) */}
         <input type="file" accept="image/*" onChange={handleImageChange} />
 
-        {/* Image Preview */}
         {preview && <img src={preview} alt="Preview" width="200" />}
 
         <h3>Select Platforms</h3>
@@ -125,18 +119,9 @@ function UploadItem() {
           </div>
         ))}
 
-        {/* Upload Button */}
         <button onClick={handleUpload} disabled={loading}>
           {loading ? "Processing..." : "Identify Item"}
         </button>
-
-        {/* Show Item Details */}
-        {itemDetails && (
-          <div>
-            <h3>Item Details:</h3>
-            <pre>{JSON.stringify(itemDetails, null, 2)}</pre>
-          </div>
-        )}
       </div>
     </>
   );
