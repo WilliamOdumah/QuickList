@@ -116,176 +116,99 @@ const getSuggestedPrice = async (itemDetails) => {
 // Enable stealth mode to prevent bot detection
 puppeteer.use(stealthPlugin());
 
-// const postListingWithPuppeteer = async (platform, details, imagePath) => {
-//     const browser = await puppeteer.launch({
-//       headless: false,
-//       userDataDir: "./fb-session", // Keep session active
-//       args: ["--disable-blink-features=AutomationControlled"], // Helps avoid bot detection
-//     });
-  
-//     const page = await browser.newPage();
-//     try {
-//       console.log("🟢 Opening Facebook Marketplace...");
-//       await page.goto("https://www.facebook.com/marketplace/create/item", { waitUntil: "domcontentloaded" });
-  
-//       // 🛑 Check if Facebook requires login
-//       if (await page.$('input[name="email"]')) {
-//         console.log("🔴 Facebook requires login. Waiting for manual login...");
-//         await waitForLogin(page); // Wait for login to be detected
-//       }
-  
-//       console.log("🟢 Login detected. Proceeding with listing...");
-      
-//     //   // ✅ Wait for the image upload button
-//     //   console.log("🟢 Uploading image...");
-//     //   await page.waitForSelector('input[type="file"]', { timeout: 20000 });
-//     //   const inputUploadHandle = await page.$('input[type="file"]');
-//     //   await inputUploadHandle.uploadFile(imagePath);
-  
-//     //   // ✅ Ensure the image loads properly before continuing
-//     //   await new Promise(resolve => setTimeout(resolve, 5000));
-  
-
-//      // ✅ Enter Title (Updated Selector)
-//     console.log("🟢 Entering title...");
-//     await page.waitForSelector('input[name="Title"]', { timeout: 10000 });
-//     await page.type('input[name="Title"]', details.item_name);
-
-//     // ✅ Enter Price (Updated Selector)
-//     console.log("🟢 Entering price...");
-//     await page.waitForSelector('input[aria-label="Price"]', { timeout: 10000 });
-//     await page.type('input[aria-label="Price"]', details.suggested_price.toString());
-
-//     // ✅ Select Category (Updated Click-Based Dropdown)
-//     console.log("🟢 Selecting category...");
-//     await page.waitForSelector('div[role="button"][aria-label="Category"]', { timeout: 10000 });
-//     await page.click('div[role="button"][aria-label="Category"]');
-//     await new Promise(resolve => setTimeout(resolve, 2000)); // Allow dropdown to open
-
-//     // Select category by typing and pressing enter
-//     await page.keyboard.type(details.category);
-//     await page.keyboard.press("Enter");
-//     await new Promise(resolve => setTimeout(resolve, 2000)); // Ensure selection registers
-
-//     // ✅ Select Condition (Updated Click-Based Dropdown)
-//     console.log("🟢 Selecting condition...");
-//     await page.waitForSelector('div[role="button"][aria-label="Condition"]', { timeout: 10000 });
-//     await page.click('div[role="button"][aria-label="Condition"]');
-//     await new Promise(resolve => setTimeout(resolve, 2000)); // Allow dropdown to open
-
-//     // Select condition by typing and pressing enter
-//     await page.keyboard.type(details.condition);
-//     await page.keyboard.press("Enter");
-//     await new Promise(resolve => setTimeout(resolve, 2000)); // Ensure selection registers
-
-//     // ✅ Enter Description (Updated Selector)
-//     console.log("🟢 Entering description...");
-//     await page.waitForSelector('textarea[aria-label="Description"]', { timeout: 10000 });
-//     await page.type('textarea[aria-label="Description"]', "Listed using Quick List");
-
-//     // ✅ Click Publish (Updated Selector)
-//     console.log("🟢 Publishing listing...");
-//     await page.waitForSelector('div[role="button"]:has-text("Publish")', { timeout: 10000 });
-//     await page.click('div[role="button"]:has-text("Publish")');
-
-//     console.log(`✅ Successfully listed ${details.item_name} on Facebook!`);
-//     await new Promise(resolve => setTimeout(resolve, 5000)); // ✅ Fixed wait
-
-//     await browser.close();
-
-//       return true;
-//     } catch (error) {
-//       console.error(`❌ Error listing on Facebook:`, error);
-//       await browser.close();
-//       return false;
-//     }
-//   };
-
-
 const postListingWithPuppeteer = async (platform, details) => {
-    const browser = await puppeteer.launch({
-        headless: false,
-        userDataDir: "./kijiji-session", // Keep session active
-        args: ["--disable-blink-features=AutomationControlled"], // Helps avoid bot detection
-    });
+    if (platform.toLowerCase() === "kijiji") {
+        console.log("🟢 Platform is Kijiji. Proceeding with listing...");
 
-    const page = await browser.newPage();
-    try {
-        console.log("🟢 Opening Kijiji...");
-        await page.goto("https://www.kijiji.ca/p-select-category.html", { waitUntil: "domcontentloaded" });
-
-        // Check if Kijiji requires login
-        if (await page.$('input[name="emailOrNickname"]')) {
-            console.log("🔴 Kijiji requires login. Waiting for manual login...");
-            await waitForLogin(page);
-        }
-
-        console.log("🟢 Login detected. Proceeding with listing...");
-
-        // Wait for the Title field to appear (Ensure form loads)
-        console.log("🟢 Waiting for the listing form to load...");
-        await page.waitForSelector("#AdTitleForm", { timeout: 15000 });
-
-        // Enter Title
-        console.log("🟢 Entering title...");
-        await page.type("#AdTitleForm", details.item_name);
-
-        console.log("🟢 Clicking Next...");
-        await page.waitForSelector('button[class*="button__futurePrimary"]', { timeout: 10000 });
-        await page.click('button[class*="button__futurePrimary"]');
-        console.log("✅ Next button clicked!");
-
-        console.log("🟢 Selecting 'Buy & Sell' category...");
-        await page.waitForSelector('button:has(span[class*="categoryName"])', { timeout: 10000 });
-        await page.click('button:has(span[class*="categoryName"])');
-        console.log("✅ 'Buy & Sell' category selected!");
-
-        // Scroll down to ensure category selection is visible
-        console.log("🟢 Scrolling to the bottom...");
-        await page.evaluate(() => {
-            window.scrollTo(0, document.body.scrollHeight);
+        const browser = await puppeteer.launch({
+            headless: false,
+            userDataDir: "./kijiji-session", // Keep session active
+            args: ["--disable-blink-features=AutomationControlled"], // Helps avoid bot detection
         });
-        await new Promise(resolve => setTimeout(resolve, 3000));
 
-        console.log("🟢 Selecting last category...");
-        const categoryButtons = await page.$$('button[class*="categoryButton-"]'); 
-        await categoryButtons[categoryButtons.length - 1].click();
-        console.log("✅ Last category selected!");
+        const page = await browser.newPage();
+        try {
+            console.log("🟢 Opening Kijiji...");
+            await page.goto("https://www.kijiji.ca/p-select-category.html", { waitUntil: "domcontentloaded" });
 
-        // Enter Description
-        console.log("🟢 Entering description...");
-        await page.waitForSelector('#pstad-descrptn', { timeout: 10000 });
-        await page.type('#pstad-descrptn', 'Listed by QuickList');
-        console.log("✅ Description entered!");
+            // Check if Kijiji requires login
+            if (await page.$('input[name="emailOrNickname"]')) {
+                console.log("🔴 Kijiji requires login. Waiting for manual login...");
+                await waitForLogin(page);
+            }
 
-        // Enter Price
-        console.log("🟢 Entering price...");
-        await page.waitForSelector('#PriceAmount', { timeout: 10000 });
-        await page.type('#PriceAmount', details.suggested_price.toString());
-        console.log("✅ Price entered!");
+            console.log("🟢 Login detected. Proceeding with listing...");
 
-        // Click 'Post Ad' button
-        console.log("🟢 Clicking 'Post Ad' button...");
-        await page.waitForSelector('button[class*="button__primary-"]', { timeout: 10000 });
-        await page.click('button[class*="button__primary-"]');
-        console.log("✅ Ad posted successfully!");
+            // Wait for the Title field to appear (Ensure form loads)
+            console.log("🟢 Waiting for the listing form to load...");
+            await page.waitForSelector("#AdTitleForm", { timeout: 15000 });
 
-        // Wait for Redirect to Listing Page
-        console.log("🟢 Waiting for Kijiji to redirect to the listing...");
-        await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 15000 });
+            // Enter Title
+            console.log("🟢 Entering title...");
+            await page.type("#AdTitleForm", details.item_name);
 
-        // Extract Listing URL
-        const listingUrl = page.url();
-        console.log(`✅ Listing URL: ${listingUrl}`);
+            console.log("🟢 Clicking Next...");
+            await page.waitForSelector('button[class*="button__futurePrimary"]', { timeout: 10000 });
+            await page.click('button[class*="button__futurePrimary"]');
+            console.log("✅ Next button clicked!");
 
-        await browser.close();
-        return listingUrl;
-    } catch (error) {
-        console.error(`❌ Error listing on Kijiji:`, error);
-        await browser.close();
+            console.log("🟢 Selecting 'Buy & Sell' category...");
+            await page.waitForSelector('button:has(span[class*="categoryName"])', { timeout: 10000 });
+            await page.click('button:has(span[class*="categoryName"])');
+            console.log("✅ 'Buy & Sell' category selected!");
+
+            // Scroll down to ensure category selection is visible
+            console.log("🟢 Scrolling to the bottom...");
+            await page.evaluate(() => {
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+            await new Promise(resolve => setTimeout(resolve, 3000));
+
+            console.log("🟢 Selecting last category...");
+            const categoryButtons = await page.$$('button[class*="categoryButton-"]'); 
+            await categoryButtons[categoryButtons.length - 1].click();
+            console.log("✅ Last category selected!");
+
+            // Enter Description
+            console.log("🟢 Entering description...");
+            await page.waitForSelector('#pstad-descrptn', { timeout: 10000 });
+            await page.type('#pstad-descrptn', 'Listed by QuickList');
+            console.log("✅ Description entered!");
+
+            // Enter Price
+            console.log("🟢 Entering price...");
+            await page.waitForSelector('#PriceAmount', { timeout: 10000 });
+            await page.type('#PriceAmount', details.suggested_price.toString());
+            console.log("✅ Price entered!");
+
+            // Click 'Post Ad' button
+            console.log("🟢 Clicking 'Post Ad' button...");
+            await page.waitForSelector('button[class*="button__primary-"]', { timeout: 10000 });
+            await page.click('button[class*="button__primary-"]');
+            console.log("✅ Ad posted successfully!");
+
+            // Wait for Redirect to Listing Page
+            console.log("🟢 Waiting for Kijiji to redirect to the listing...");
+            await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 15000 });
+
+            // **Manually Set the Kijiji Listings URL**
+            const listingUrl = "https://www.kijiji.ca/m-my-ads/active/1";
+            console.log(`✅ Listing URL: ${listingUrl}`);
+
+            await browser.close();
+            return listingUrl;
+        } catch (error) {
+            console.error(`❌ Error listing on Kijiji:`, error);
+            await browser.close();
+            return null;
+        }
+    } else {
+        // Placeholder for other platforms (To be implemented later)
+        console.log(`❌ Platform ${platform} is not yet supported.`);
         return null;
     }
 };
+
 
 
 // Function to Wait for User Login**
